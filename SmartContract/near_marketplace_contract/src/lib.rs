@@ -10,5 +10,18 @@ pub struct Marketplace {
 
 #[near_bindgen]
 impl Marketplace {
-    // marketplace methods will be implemented here
+    #[init]
+    pub fn init() -> Self {
+        Self {
+            products: UnorderedMap::new(b"product".to_vec()),
+        }
+    }
+
+    pub fn set_product(&mut self, id: String, product_name: String) {
+        self.products.insert(&id, &product_name);
+    }
+
+    pub fn get_product(&self, id: &String) -> Option<String> {
+        self.products.get(id)
+    }
 }
