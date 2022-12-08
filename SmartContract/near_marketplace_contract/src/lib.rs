@@ -1,6 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::UnorderedMap;
-use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault};
+use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, Promise};
 use serde::{Deserialize, Serialize};
 
 #[near_bindgen]
@@ -29,6 +29,27 @@ impl Marketplace {
 
     pub fn get_products(&self) -> Vec<Product> {
         self.listed_products.values_as_vector().to_vec()
+    }
+
+    #[payable]
+    pub fn buy_product(&mut self, product_id: &String) {
+        match self.listed_products.get(product_id) {
+            Some(ref mut product) => {
+                let price = product.price.parse().unwrap();
+                assert_eq!(
+                    env::attached_deposit(),
+                    price,
+                    "attached deposit should be equal to the price of the product"
+                );
+                let owner = &product.owner.as_str();
+                Promise::new(owner.parse().unwrap()).transfer(price);
+                product.increment_sold_amount();
+                self.listed_products.insert(&product.id, &product);
+            }
+            _ => {
+                env::panic_str("product not found");
+            }
+        }
     }
 }
 
