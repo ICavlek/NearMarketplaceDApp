@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Button } from "react-bootstrap";
 
 const Cover = ({ name, login, coverImg }) => {
     if ((name, login, coverImg)) {
@@ -17,13 +18,13 @@ const Cover = ({ name, login, coverImg }) => {
                     </div>
                     <h1>{name}</h1>
                     <p>Please connect your wallet to continue.</p>
-                    <button
+                    <Button
                         onClick={login}
                         variant="outline-light"
                         className="rounded-pill px-3 mt-3"
                     >
                         Connect Wallet
-                    </button>
+                    </Button>
                 </div>
                 <p className="mt-auto text-secondary">Powered by NEAR</p>
             </div>
