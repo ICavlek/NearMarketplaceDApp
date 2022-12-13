@@ -6,7 +6,7 @@ const GAS = 100000000000000;
 export function createProduct(product) {
     product.id = uuid4();
     product.price = parseNearAmount(product.price + "");
-    return window.contract.set_product({ product });
+    return window.contract.set_product({ payload: product });
 }
 
 export function getProducts() {
@@ -14,5 +14,5 @@ export function getProducts() {
 }
 
 export async function buyProduct({ id, price }) {
-    await window.contract.buy_product({ productId: id }, GAS, price);
+    await window.contract.buy_product({ product_id: id }, GAS, price);
 }
